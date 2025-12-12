@@ -33,11 +33,11 @@ export class TimeSync {
       // 并发请求多个时间服务器
       const promises = this.timeServers.map(async (server) => {
         try {
-          const start = performance.now();
+          const start = Date.now();
           const response = await axios.get(server, {
             timeout: 5000,
           });
-          const end = performance.now();
+          const end = Date.now();
           const rtt = end - start; // 往返时间
 
           let serverTime: number;
@@ -72,7 +72,7 @@ export class TimeSync {
 
       const responses = await Promise.allSettled(promises);
 
-      responses.forEach((result) => {
+      responses.forEach((result: PromiseSettledResult<number | null>) => {
         if (result.status === 'fulfilled' && result.value !== null) {
           results.push(result.value);
         }
