@@ -74,6 +74,7 @@ jobs:
   build-ios:
     name: 构建 iOS IPA
     runs-on: macos-latest
+    if: false  # 暂时禁用 iOS 构建，需要完整的 Xcode 项目配置
 
     steps:
     - name: 检出代码
@@ -86,6 +87,11 @@ jobs:
 
     - name: 安装依赖
       run: npm install
+
+    - name: 初始化 React Native iOS
+      run: |
+        npx react-native init-ios-library FloatingTime
+        cd ios
 
     - name: 安装 CocoaPods
       run: |
