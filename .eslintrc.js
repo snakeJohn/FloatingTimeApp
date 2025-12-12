@@ -3,6 +3,9 @@ module.exports = {
   extends: '@react-native',
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
+  rules: {
+    'prettier/prettier': 'off', // 禁用 prettier 规则避免兼容性问题
+  },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
