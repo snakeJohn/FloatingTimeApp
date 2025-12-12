@@ -65,6 +65,11 @@ describe('App', () => {
   it('点击同步按钮应该触发时间同步', async () => {
     const {getByText} = render(<App />);
 
+    // 等待初始同步完成
+    await waitFor(() => {
+      expect(getByText('同步')).toBeTruthy();
+    });
+
     const syncButton = getByText('同步');
     fireEvent.press(syncButton);
 
