@@ -16,5 +16,11 @@ module.exports = {
         'react-native/no-inline-styles': 'off',
       },
     },
+    {
+      files: ['**/__tests__/**/*', '*.test.ts', '*.test.tsx', 'jest.setup.js'],
+      env: {
+        jest: true,
+      },
+    },
   ],
 };

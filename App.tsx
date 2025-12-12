@@ -1,11 +1,10 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   AppState,
-  Platform,
   Dimensions,
   StatusBar,
 } from 'react-native';
@@ -28,7 +27,6 @@ function App(): JSX.Element {
   });
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState('未同步');
-  const [offset, setOffset] = useState(0);
 
   const translateX = useSharedValue(SCREEN_WIDTH - 200);
   const translateY = useSharedValue(100);
@@ -74,7 +72,6 @@ function App(): JSX.Element {
 
     try {
       const result = await timeSync.syncTime();
-      setOffset(result.offset);
       setSyncStatus(`已同步 (偏移: ${result.offset.toFixed(0)}ms)`);
 
       // 3秒后隐藏同步状态

@@ -43,7 +43,7 @@ describe('TimeSync', () => {
     it('日期格式应该正确填充零', () => {
       const result = timeSync.getFormattedTime();
 
-      const [year, month, day] = result.date.split('-');
+      const [_year, month, day] = result.date.split('-');
       expect(month.length).toBe(2);
       expect(day.length).toBe(2);
     });
