@@ -26,8 +26,6 @@ ios/.xcode.env.local
 /android/local.properties
 /android/.gradle
 /android/captures/
-/android/gradlew
-/android/gradlew.bat
 /android/.cxx/
 /android/app/release
 

@@ -8,7 +8,8 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: 初始化悬浮时间项目\n\n## 功能特性\n- ⏱️ 精确到毫秒的时间显示\n- 🌐 网络时间同步（WorldTimeAPI、TimeAPI）\n- 📱 可拖动的悬浮窗口\n- 🎨 半透明黑色背景设计\n- 🔄 每小时自动同步网络时间\n- 📱 支持 Android 和 iOS 平台\n\n## 技术栈\n- React Native 0.73\n- TypeScript 5.3\n- React Native Reanimated 3.6\n- React Native Gesture Handler 2.14\n- Axios 1.6\n\n## 测试\n- ✅ 完整的单元测试套件（23个测试用例）\n- ✅ 测试覆盖率目标 70%\n- ✅ Jest + React Testing Library\n\n## Bug 修复\n- 修复 App.tsx 导入路径错误\n- 修复 TimeSync.ts WorldTimeAPI 解析错误\n- 添加所有必要的配置文件\n\n## 文档\n- README.md - 完整项目说明\n- DEPLOYMENT.md - 部署指南\n- BUG_FIX_REPORT.md - Bug 修复报告\n- PROJECT_STATUS.md - 项目状态\n- QUICKSTART.md - 快速启动指南\n- CONTRIBUTING.md - 贡献指南\n\n🤖 Generated with Claude Code\nEOF\n)\")",
       "Bash(git branch:*)",
       "Bash(git push:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
