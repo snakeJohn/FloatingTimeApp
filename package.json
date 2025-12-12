@@ -18,11 +18,11 @@
     "build:ios": "cd ios && xcodebuild -workspace FloatingTime.xcworkspace -scheme FloatingTime -configuration Release archive"
   },
   "dependencies": {
+    "axios": "^1.6.0",
     "react": "18.2.0",
     "react-native": "0.74.6",
-    "react-native-gesture-handler": "^2.14.0",
-    "react-native-reanimated": "^3.10.0",
-    "axios": "^1.6.0"
+    "react-native-gesture-handler": "2.14.0",
+    "react-native-reanimated": "3.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
