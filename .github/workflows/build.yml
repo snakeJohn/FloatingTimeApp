@@ -1,0 +1,162 @@
+name: 构建 Android 和 iOS
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: 构建 Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: 设置 JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        cache: 'gradle'
+
+    - name: 安装依赖
+      run: npm ci
+
+    - name: 设置 Gradle 权限
+      run: cd android && chmod +x ./gradlew
+
+    - name: 构建 Android Release APK
+      run: |
+        cd android
+        ./gradlew assembleRelease --no-daemon
+
+    - name: 上传 APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-release
+        path: android/app/build/outputs/apk/release/app-release.apk
+        retention-days: 30
+
+    - name: 创建 Release（仅标签推送）
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: android/app/build/outputs/apk/release/app-release.apk
+        body: |
+          ## 悬浮时间 ${{ github.ref_name }}
+
+          ### Android
+          - APK 文件已准备就绪
+
+          ### 功能
+          - ⏱️ 精确到毫秒的时间显示
+          - 🌐 网络时间同步
+          - 📱 悬浮窗显示
+          - 🎨 可拖动位置
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-ios:
+    name: 构建 iOS IPA
+    runs-on: macos-13
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: 安装依赖
+      run: npm ci
+
+    - name: 安装 CocoaPods
+      run: |
+        cd ios
+        pod install
+
+    - name: 设置 Xcode 版本
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.0'
+
+    - name: 构建 iOS
+      run: |
+        cd ios
+        xcodebuild -workspace FloatingTime.xcworkspace \
+          -scheme FloatingTime \
+          -configuration Release \
+          -destination 'generic/platform=iOS' \
+          -archivePath $PWD/build/FloatingTime.xcarchive \
+          archive \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO
+
+    - name: 导出 IPA
+      run: |
+        cd ios
+        xcodebuild -exportArchive \
+          -archivePath $PWD/build/FloatingTime.xcarchive \
+          -exportPath $PWD/build \
+          -exportOptionsPlist exportOptions.plist \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO
+
+    - name: 上传 IPA
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-release
+        path: ios/build/*.ipa
+        retention-days: 30
+
+    - name: 创建 Release（仅标签推送）
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ios/build/*.ipa
+        body: |
+          ## iOS 构建完成
+
+          注意: 此 IPA 未签名，仅供测试使用。
+          生产环境需要配置有效的证书和描述文件。
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  lint:
+    name: 代码检查
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: 安装依赖
+      run: npm ci
+
+    - name: 运行 ESLint
+      run: npm run lint --if-present
+
+    - name: TypeScript 类型检查
+      run: npx tsc --noEmit
